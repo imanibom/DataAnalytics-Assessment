@@ -30,6 +30,18 @@ DataAnalytics-Assessment/
 
 ---
 
+## 🔎 Hints and Schema Notes
+
+* `owner_id` is a foreign key to the `id` primary key in the `users_customuser` table.
+* `plan_id` is a foreign key to the `id` primary key in the `plans_plan` table.
+* `savings_plan`: identified by `is_regular_savings = 1`
+* `investment_plan`: identified by `is_a_fund = 1`
+* `confirmed_amount`: field representing the value of inflow transactions (in kobo).
+* `amount_withdrawn`: field representing the value of withdrawal transactions (in kobo).
+* **All amount fields are denominated in kobo.** Ensure conversion to Naira (₦) where needed by dividing by 100.
+
+---
+
 # Assessment\_Q1
 
 ## Savings Goal Exceeded Report Query
@@ -68,13 +80,13 @@ SELECT
     pp.owner_id AS user_id,
     ROUND(SUM(ssa.amount), 2) AS contributed_amount,
     ROUND(SUM(pp.amount), 2) AS savings_target
-FROM
+FROM 
     plans_plan pp
-JOIN
+JOIN 
     savings_savingsaccount ssa ON ssa.plan_id = pp.id
-JOIN
+JOIN 
     users_customuser u ON u.id = pp.owner_id
-WHERE
+WHERE 
     pp.status_id = 2
     AND pp.is_deleted = 0
     AND pp.is_archived = 0
@@ -82,9 +94,9 @@ WHERE
     AND u.is_account_deleted = 0
     AND u.is_account_disabled = 0
     AND u.is_private = 0
-GROUP BY
+GROUP BY 
     pp.owner_id
-HAVING
+HAVING 
     contributed_amount > savings_target;
 ```
 
